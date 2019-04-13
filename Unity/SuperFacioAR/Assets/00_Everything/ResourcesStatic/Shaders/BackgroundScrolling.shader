@@ -3,11 +3,13 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+		_Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
     }
     SubShader
     {
         // No culling or depth
         //Cull Off ZWrite Off ZTest Always
+		Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
@@ -38,10 +40,11 @@
             }
 
             sampler2D _MainTex;
+			fixed4 _Color;
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed4 col = tex2D(_MainTex, i.uv + float2(_Time.z, _Time.z)*0.2);
+                fixed4 col = tex2D(_MainTex, float2(1.0-i.uv.x, i.uv.y) + float2(_Time.z, _Time.z)*0.2) * _Color;
                 // just invert the colors
                 //col.rgb = 1 - col.rgb;
                 return col;
